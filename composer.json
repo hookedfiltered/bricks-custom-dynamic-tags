@@ -1,0 +1,26 @@
+{
+    "name": "hookedfiltered/bricks-custom-dynamic-tags",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Daniel Iser",
+            "email": "daniel@code-atlantic.com"
+        }
+    ],
+    "require-dev": {
+        "code-atlantic/coding-standards": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "HookedFiltered\\BricksBuilder\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
