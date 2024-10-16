@@ -59,7 +59,7 @@ class MyCustomTags extends CustomTags {
 
 Or for tags with attributes:
 
-````php
+```php
 use HookedFiltered\BricksBuilder\CustomTags;
 class MyCustomTags extends CustomTags
 {
@@ -106,7 +106,7 @@ class MyCustomTags extends CustomTags
 
 ```php
 new MyCustomTags();
-````
+```
 
 3. Your custom tags are now ready to use in Bricks Builder!
 
