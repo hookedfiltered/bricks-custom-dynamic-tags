@@ -39,6 +39,13 @@ class GlobalTags {
 	private $tags = [];
 
 	/**
+	 * Cache for custom tag results
+	 *
+	 * @var array
+	 */
+	private $cache = [];
+
+	/**
 	 * Private constructor to prevent direct instantiation
 	 *
 	 * @return void
@@ -131,13 +138,35 @@ class GlobalTags {
 		}
 
 		$post_id = $this->get_post_id( $post );
-		$tag_id  = $this->parse_tag_id( $tag );
+		$cache_key = $this->get_cache_key( $tag, $post_id, $context );
+
+		// Check if the result is already cached
+		if ( isset( $this->cache[ $cache_key ] ) ) {
+			return $this->cache[ $cache_key ];
+		}
+
+		$tag_id = $this->parse_tag_id( $tag );
 
 		if ( isset( $this->tags[ $tag_id ] ) && is_callable( $this->tags[ $tag_id ]['callback'] ) ) {
-			return call_user_func( $this->tags[ $tag_id ]['callback'], $post_id, $tag, $context );
+			$result = call_user_func( $this->tags[ $tag_id ]['callback'], $post_id, $tag, $context );
+			$this->cache[ $cache_key ] = $result; // Cache the result
+			return $result;
 		}
 
 		return $tag;
+	}
+
+	/**
+	 * Generate a unique cache key based on tag, post ID, and context
+	 *
+	 * @param string $tag     The tag name.
+	 * @param int    $post_id The post ID.
+	 * @param string $context The context of the tag.
+	 *
+	 * @return string
+	 */
+	private function get_cache_key( $tag, $post_id, $context ) {
+		return md5( $tag . '|' . $post_id . '|' . $context );
 	}
 
 	/**
