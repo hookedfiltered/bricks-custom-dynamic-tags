@@ -138,18 +138,20 @@ class GlobalTags {
 		}
 
 		$post_id = $this->get_post_id( $post );
-		$cache_key = $this->get_cache_key( $tag, $post_id, $context );
+		$tag_id  = $this->parse_tag_id( $tag );
 
-		// Check if the result is already cached
-		if ( isset( $this->cache[ $cache_key ] ) ) {
-			return $this->cache[ $cache_key ];
-		}
-
-		$tag_id = $this->parse_tag_id( $tag );
-
+		// Check if the tag is a custom tag before caching.
 		if ( isset( $this->tags[ $tag_id ] ) && is_callable( $this->tags[ $tag_id ]['callback'] ) ) {
+			$cache_key = $this->get_cache_key( $tag, $post_id, $context );
+
+			// Check if the result is already cached.
+			if ( isset( $this->cache[ $cache_key ] ) ) {
+				return $this->cache[ $cache_key ];
+			}
+
 			$result = call_user_func( $this->tags[ $tag_id ]['callback'], $post_id, $tag, $context );
-			$this->cache[ $cache_key ] = $result; // Cache the result
+
+			$this->cache[ $cache_key ] = $result; // Cache the result.
 			return $result;
 		}
 
